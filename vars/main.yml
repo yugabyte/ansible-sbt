@@ -1,11 +1,11 @@
 ---
 sbt_playbook_version: "0.2.0"
-sbt_version: "1.8.2"
+sbt_version: "1.9.4"
 sbt_archive_name: "sbt-{{sbt_version}}"
 sbt_archive_file: "{{sbt_archive_name}}.tgz"
 sbt_url_prefix: "https://github.com/sbt/sbt/releases/download"
 sbt_download_url: "{{ sbt_url_prefix }}/v{{ sbt_version }}/{{ sbt_archive_file }}"
-sbt_archive_checksum: "sha256:1f65344da074dbd66dfefa93c0eff8d319d772e5cad47fcbeb6ae178bbdf4686"
+sbt_archive_checksum: "sha256:68bd0225c29da39b2cfb25b6770a919f69e47621bb250112152742d7f29ab870"
 sbt_install_prefix: /usr/local
 sbt_lib_path: "{{ sbt_install_prefix }}/share/sbt"
 sbt_lib_path_target: "{{sbt_lib_path}}/{{sbt_version}}"
