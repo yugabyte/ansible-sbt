@@ -36,11 +36,33 @@
         state: directory
         recurse: yes
 
-    - name: Download sbt v{{sbt_version}}
-      get_url:
-        url: "{{sbt_download_url}}"
-        dest: "/opt/src/{{sbt_archive_file}}"
-        checksum: "{{ sbt_archive_checksum }}"
+    - block:
+      - name: Download sbt v{{sbt_version}} (Mac)
+        command: curl -sSfL -o "/opt/src/{{sbt_archive_file}}" "{{sbt_download_url}}"
+        args:
+          creates: "/opt/src/{{sbt_archive_file}}"
+
+      - name: Verify sbt checksum (Mac)
+        stat:
+          path: "/opt/src/{{sbt_archive_file}}"
+          checksum_algorithm: sha256
+        register: sbt_stat
+        when: sbt_archive_checksum != ""
+
+      - name: Assert sbt integrity (Mac)
+        assert:
+          that: "sbt_stat.stat.checksum in sbt_archive_checksum"
+          fail_msg: "Checksum mismatch for sbt archive!"
+        when: sbt_archive_checksum != ""
+      when: ansible_os_family == 'Darwin'
+
+    - block:
+      - name: Download sbt v{{sbt_version}} (Linux)
+        get_url:
+          url: "{{sbt_download_url}}"
+          dest: "/opt/src/{{sbt_archive_file}}"
+          checksum: "{{ sbt_archive_checksum }}"
+      when: ansible_os_family != 'Darwin'
 
     - name: Unpack sbt
       unarchive:
